@@ -8,7 +8,7 @@ const page = async () => {
 
   const user = await getUser();
 
-  if (!user) {
+  /* if (!user) {
     return (
       <>
       <div className=""></div>
@@ -16,7 +16,8 @@ const page = async () => {
       </>
       
     )
-  }
+  } */
+ 
   return (
     <div>
       
