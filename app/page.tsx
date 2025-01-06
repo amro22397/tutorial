@@ -10,8 +10,10 @@ const page = async () => {
 
  const user = await getUser();
 
+ console.log(user)
+
  
-  if (!user) {
+  if (!user._doc.email) {
     redirect('/login');
   } 
  
