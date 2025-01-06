@@ -13,7 +13,10 @@ const RedirectToLogin = () => {
     }
 
     return (
+        <>
         <div className=""></div>
+        <div className=""></div>
+        </>
     )
 
 }
