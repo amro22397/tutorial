@@ -1,22 +1,19 @@
 import { getUser } from '@/actions/getUser'
 import RedirectToLogin from '@/components/RedirectToLogin';
+import { UserAuth } from '@/context/AuthContext';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import React from 'react'
 
 const page = async () => {
 
-  const user = await getUser();
+ const user = await getUser();
 
-  /* if (!user) {
-    return (
-      <>
-      <div className=""></div>
-      <RedirectToLogin />
-      </>
-      
-    )
-  } */
+ 
+  if (!user) {
+    redirect('/login');
+  } 
  
   return (
     <div>

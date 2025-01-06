@@ -12,9 +12,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { signIn } from "next-auth/react"
 import { CircularProgress } from "@mui/material"
+import { UserAuth } from "@/context/AuthContext"
+import { useRouter } from "next/navigation"
 
 export function LoginForm({
   className,
@@ -23,6 +25,11 @@ export function LoginForm({
 
     const [loading, setLoading] = useState(false);
     const [loadingGoogle, setLoadingGoogle] = useState(false);
+
+    const { user, googleSignIn, logOut } = UserAuth();
+    console.log(user);
+
+    const router = useRouter();
     
     
         const [formData, setFormData] = useState({
@@ -45,7 +52,6 @@ export function LoginForm({
             setLoadingGoogle(true);
 
             await signIn('google', {callbackUrl: '/'})
-
             setLoadingGoogle(false)
             
         }
@@ -58,6 +64,14 @@ export function LoginForm({
             setLoading(false);
           }
 
+
+          useEffect(() => {
+            const checkAuthentication = async () => {
+              await new Promise((resolve) => setTimeout(resolve, 50));
+              setLoading(false);
+            };
+            checkAuthentication();
+          }, [user]);
 
     const formStyles = `text-md`
   return (

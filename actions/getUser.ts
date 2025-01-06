@@ -3,9 +3,33 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth"
 
+import type {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next"
+import type { NextAuthOptions } from "next-auth"
 
-export async function getSession() {
+
+
+export const config = {
+  providers: [], // rest of your config
+} satisfies NextAuthOptions
+
+
+
+/* export async function getSession() {
     return await getServerSession(authOptions);
+  } */
+
+
+  export function getSession(
+    ...args:
+      | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+      | [NextApiRequest, NextApiResponse]
+      | []
+  ) {
+    return getServerSession(...args, config)
   }
 
 export async function getUser() {
