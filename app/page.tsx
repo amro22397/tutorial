@@ -1,4 +1,4 @@
-import { getUser } from '@/actions/getUser'
+import { getSession, getUser } from '@/actions/getUser'
 import RedirectToLogin from '@/components/RedirectToLogin';
 import { UserAuth } from '@/context/AuthContext';
 import { signOut } from 'next-auth/react';
@@ -8,14 +8,14 @@ import React from 'react'
 
 const page = async () => {
 
- const user = await getUser();
+ const user = await getSession();
 
  console.log(user)
 
  
-  if (!user._doc.email) {
+  /* if (!user) {
     redirect('/login');
-  } 
+  } */
  
   return (
     <div>
