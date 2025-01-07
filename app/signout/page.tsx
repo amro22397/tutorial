@@ -10,7 +10,7 @@ const page = () => {
 
   return (
     <div>
-      <button onClick={ () => signOut({callbackUrl: '/'}) }
+      <button onClick={ () => signOut({callbackUrl: '/login'}) }
        className="">
         Signout
       </button>

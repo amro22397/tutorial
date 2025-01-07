@@ -17,6 +17,7 @@ import { signIn } from "next-auth/react"
 import { CircularProgress } from "@mui/material"
 import { UserAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
+import { Loader, Loader2 } from "lucide-react"
 
 export function LoginForm({
   className,
@@ -26,14 +27,13 @@ export function LoginForm({
     const [loading, setLoading] = useState(false);
     const [loadingGoogle, setLoadingGoogle] = useState(false);
 
-    const { user, googleSignIn, logOut } = UserAuth();
-    console.log(user);
+    // const { user, googleSignIn, logOut } = UserAuth();
+    // console.log(user);
 
     const router = useRouter();
     
     
         const [formData, setFormData] = useState({
-            name: "",
             email: "",
             password: "",
         });
@@ -65,13 +65,15 @@ export function LoginForm({
           }
 
 
-          useEffect(() => {
+      /*    useEffect(() => {
             const checkAuthentication = async () => {
               await new Promise((resolve) => setTimeout(resolve, 50));
               setLoading(false);
             };
             checkAuthentication();
-          }, [user]);
+          }, [user]); */
+
+          console.log(formData)
 
     const formStyles = `text-md`
   return (
@@ -113,24 +115,30 @@ export function LoginForm({
                 required />
               </div>
               <Button type="submit" className="w-full">
-                {loading ? <CircularProgress /> : "Login"}
+                {loading ? <Loader2 /> : "Login"}
               </Button>
               <Button variant="outline" className="w-full"
               onClick={handleSignWithGoogle}
               type="button">
+                
+                {loadingGoogle ? <Loader2 /> : 
+                <>
                 <Image 
                 src={'/Google_Icons-09-512.webp'}
                 width={24}
                 height={24}
                 alt="Google logo"
                 />
-                {loadingGoogle ? <CircularProgress color="secondary" /> : "Continue with Google"}
+                Continue With Google
+                </>
+                }
+
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
               <a href="/register" className="underline underline-offset-4">
-                {loading ? <CircularProgress color="secondary" /> : "Login"}
+                Register
               </a>
             </div>
           </form>
