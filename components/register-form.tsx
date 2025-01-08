@@ -12,10 +12,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
-import React, { useActionState, useState } from "react"
+import React, { useActionState, useEffect, useState } from "react"
 import { toast } from "@/hooks/use-toast"
 import axios from "axios"
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { EyeIcon, EyeOffIcon, Loader, Loader2 } from "lucide-react"
 import { CircularProgress } from '@mui/material';
 import { Register } from "@/actions/actions"
@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/form";
 import type { Control, FieldPath } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
 
 export function RegisterForm({
   className,
@@ -47,6 +48,8 @@ export function RegisterForm({
 
     const [type, setType] = useState("password");
     const [validation, setValidation] = useState(false);
+
+    const router = useRouter();
 
     const handleValidation = (value: string) => {
       const lower = new RegExp('(?=.*[a-z])')
@@ -193,6 +196,12 @@ export function RegisterForm({
     
     const formStyles = `text-md`
     const iconClass = `absolute right-4 top-2 text-gray-500 cursor-pointer`
+
+
+    const session = useSession();
+        console.log(session)
+
+    
 
 
   return (

@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { CircularProgress } from "@mui/material"
 import { UserAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
@@ -78,6 +78,10 @@ export function LoginForm({
 
     const formStyles = `text-md`
     const iconClass = `absolute right-4 top-2 text-gray-500 cursor-pointer`
+
+
+    const session = useSession();
+    console.log(session)
 
 
   return (

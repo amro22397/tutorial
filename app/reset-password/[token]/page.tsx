@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+import { EyeIcon, EyeOffIcon, Loader2 } from 'lucide-react'
   
 
 const page = ({ params }: any) => {
@@ -40,9 +41,30 @@ const page = ({ params }: any) => {
     const [verified, setVerified] = useState(false);
     const [user, setUser] = useState(null);
 
+    const [type, setType] = useState("password");
+    const [validation, setValidation] = useState(false);
+
     const [loading, setLoading] = useState(false);
 
     const session = useSession();
+    console.log(session);
+
+
+    const handleValidation = (value: string) => {
+      const lower = new RegExp('(?=.*[a-z])')
+      const upper = new RegExp('(?=.*[A-Z])');
+      const number = new RegExp('(?=.*[0-9])');
+      const special = new RegExp('(?=.*[!@#\$%\^&\*])');
+
+      if (lower.test(value) && upper.test(value) && number.test(value) && special.test(value) ) {
+        setValidation(true);
+      } else {
+        setValidation(false);
+      }
+      
+    }
+
+
 
     useEffect(() => {
       
@@ -75,17 +97,38 @@ const page = ({ params }: any) => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
 
+        if (password !== confirmPassword) {
+          toast({
+            variant: "destructive",
+            title: "Passwords do not match",
+          })
+          return;
+        }
+
         setLoading(true)
 
         try {
             const response = await axios.post("/api/reset-password", {
-                
-                password
+                token: params.token,
+                password: password,
             })
-            setMessage(response.data.message);
-            toast({
+
+            if (!response.data.success) {
+              toast({
+                variant: "destructive",
                 title: response.data.message
             })
+            }
+
+            if (response.data.success) {
+              toast({
+                className: "bg-green-500 text-white",
+                title: response.data.message
+            })
+            router.push('/login');
+            }
+
+
         } catch (error) {
             console.log(error);
             toast({
@@ -94,8 +137,20 @@ const page = ({ params }: any) => {
         }
 
         setLoading(false)
+        setPassword("");
+        setConfirmPassword("");
     }
 
+    console.log(password, confirmPassword)
+
+    const formStyles = `text-md`
+    const iconClass = `absolute right-4 top-2 text-gray-500 cursor-pointer`
+
+   /* useEffect(() => {
+      if (session.status === "authenticated") {
+        router.push('/');
+      }
+    }, [session.status, router]); */
 
   return (
     
@@ -106,34 +161,62 @@ const page = ({ params }: any) => {
       <CardTitle className='text-2xl'>Reset Password</CardTitle>
       <CardDescription className='text-gray-600'></CardDescription>
       </CardHeader>
-      <CardContent>
-        <form>
+      <CardContent className='w-full'>
+        <form onSubmit={handleSubmit}>
           <div className="grid w-full items-center gap-4">
             
-            <div className="flex flex-col space-y-1.5">
-            <Input type="password" placeholder="Password"
+            <div className="flex flex-col relative">
+            <Input type={type} placeholder="Password"
       value={password}
-      onChange={e => setPassword(e.target.value)}
+      onChange={e => {
+        setPassword(e.target.value);
+        handleValidation(e.target.value)
+      }}
       required
       className='placeholder-gray-700' />
+
+
+{type === "password" && password ? (
+  
+  <span className={`${iconClass}`}
+  onClick={() => setType("text")}
+  >
+    
+    <EyeIcon className="w-5 h-5" />
+  </span>
+
+) : type === "text" && password && (
+
+  <span className={`${iconClass}`}
+  onClick={() => setType("password")}
+  >
+    <EyeOffIcon className="w-5 h-5" />
+  </span>
+
+)}
+
             </div>
 
+
+            <div className={`${validation || password === "" ? "hidden" : "flex"} text-sm text-red-500`}>
+    You need at least one lowercase and uppercase letter, number and special character <br/> (A-Z, a-z, 0-9 and !@#$%^&*)
+    </div>
+
+
+
             <div className="flex flex-col space-y-1.5">
-              <Input type="password" placeholder="Confirm Password"
+              <Input type={type} placeholder="Confirm Password"
       value={confirmPassword}
       onChange={e => setConfirmPassword(e.target.value)}
       required
       className='placeholder-gray-700' />
             </div>
 
-          </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex flex-col items-center justify-center w-full">
-
-      <div className="flex flex-row justify-between w-full px-2">
+            <div className="flex flex-row justify-between w-full px-1 mt-2">
          
-      <Button type="submit" disabled={error.length > 0}>Submit</Button>
+      <Button type="submit" disabled={error.length > 0}>
+        {loading ? <Loader2 /> : "Submit"}
+      </Button>
       
       <Link href={'/login'}
     className='text-sm hover:underline active:text-gray-600 mt-[11.5px]' >
@@ -141,6 +224,16 @@ const page = ({ params }: any) => {
     </Link>
 
       </div>
+
+          </div>
+
+          
+
+        </form>
+      </CardContent>
+      <CardFooter className="flex flex-col items-center justify-center w-full">
+
+      
 
 {error && (
   <p className="text-sm text-red-500 mt-4">{error}</p>
