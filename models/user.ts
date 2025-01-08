@@ -1,5 +1,7 @@
 
 import { model, models, Schema } from "mongoose"
+import crypto from "crypto"
+import { boolean } from "zod"
 
 const UserSchema = new Schema({
     name: {
@@ -24,7 +26,28 @@ const UserSchema = new Schema({
         type: Date,
         required: false,
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    verifyToken: {
+        type: String,
+    },
+    verifyTokenExpires: {
+        type: Date,
+    },
 
 }, {timestamps: true})
+
+
+UserSchema.methods.getVerificationToken = function ():string {
+    const verificationToken = crypto.randomBytes(20).toString("hex");
+
+    this.verifyToken = crypto.createHash("sha256").update(verificationToken).digest("hex");
+
+    this.verifyTokenExpires = new Date(Date.now() + 3600000);
+
+    return verificationToken;
+}
 
 export const User = models?.User || model("User", UserSchema)

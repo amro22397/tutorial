@@ -48,8 +48,8 @@ export async function POST(req: Request) {
         })
         .catch(async (error) => {
             await User.updateOne({ email: email }, { $set: {
-                resetPasswordToken: undefined,
-                resetPasswordExpires: undefined,
+                resetPasswordToken: null,
+                resetPasswordExpires: null,
             }})
 
             return Response.json("Failed sending email. Try again", {

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster"
 import AppProvider from "@/components/AppContext";
 import AppContextProvider from "@/context/AuthContext"
+import EmailIsNotVerified from "@/components/EmailIsNotVerified";
 
 
 const geistSans = Geist({
@@ -29,8 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
       >
+        <EmailIsNotVerified />
         <AppContextProvider>
         <AppProvider session>
         {children}
