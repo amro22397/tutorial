@@ -243,7 +243,7 @@ export function RegisterForm({
                 }}
                 required />
                 
-                {type === "password" ? (
+                {type === "password" && formData.password ? (
   
                 <span className={`${iconClass}`}
                 onClick={() => setType("text")}
@@ -252,7 +252,7 @@ export function RegisterForm({
                   <EyeIcon className="w-5 h-5" />
                 </span>
   
-              ) : type === "text" && (
+              ) : type === "text" && formData.password && (
   
                 <span className={`${iconClass}`}
                 onClick={() => setType("password")}

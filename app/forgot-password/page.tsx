@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import {
     Card,
     CardContent,
@@ -7,22 +9,79 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-
+  import { Button } from "@/components/ui/button"
+  import { Input } from "@/components/ui/input"
+import axios from 'axios'
+import { toast } from '@/hooks/use-toast'
+import Link from 'next/link'
+import { Loader2 } from 'lucide-react'
   
 
 
 const page = () => {
+
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+
+        setLoading(true)
+
+        try {
+            await axios.post("/api/forget-password", { email });
+            toast({
+                title: 'Password reset email was sent'
+            })
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: `${error}`,
+            })
+        }
+        setEmail("");
+        setLoading(false)
+    }
+
+    console.log()
+    console.log(email)
+
   return (
-    <Card>
+    <Card className='flex flex-col justify-center items-start w-[400px] mx-auto my-80'>
   <CardHeader>
-    <CardTitle>Card Title</CardTitle>
-    <CardDescription>Card Description</CardDescription>
+    <CardTitle className='text-2xl'>Forgot Password</CardTitle>
+    <CardDescription className='text-gray-600'>Enter your email...<br/> 
+        We will send you a link to reset</CardDescription>
   </CardHeader>
   <CardContent>
-    <p>Card Content</p>
+
+  <form onSubmit={handleSubmit}
+   className="flex flex-row w-full items-center justify-between space-x-2">
+
+      <Input type="email" placeholder="Email"
+      value={email}
+      onChange={e => setEmail(e.target.value)}
+      required
+      className='placeholder-gray-700' />
+
+      <Button type="submit">{loading ? <Loader2 /> : "Send"}</Button>
+
+    </form>
+
+    
+    {message && (
+        <p className="text-sm text-red-500 mt-4">{message}</p>
+      )}
+
   </CardContent>
+
   <CardFooter>
-    <p>Card Footer</p>
+    <Link href={'/login'}
+    className='text-sm hover:underline active:text-gray-600' >
+    Back to sign in
+    </Link>
   </CardFooter>
 </Card>
 

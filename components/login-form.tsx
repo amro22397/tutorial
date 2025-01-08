@@ -17,7 +17,7 @@ import { signIn } from "next-auth/react"
 import { CircularProgress } from "@mui/material"
 import { UserAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
-import { Loader, Loader2 } from "lucide-react"
+import { EyeIcon, EyeOffIcon, Loader, Loader2 } from "lucide-react"
 
 export function LoginForm({
   className,
@@ -26,6 +26,7 @@ export function LoginForm({
 
     const [loading, setLoading] = useState(false);
     const [loadingGoogle, setLoadingGoogle] = useState(false);
+    const [type, setType] = useState("password");
 
     // const { user, googleSignIn, logOut } = UserAuth();
     // console.log(user);
@@ -76,6 +77,9 @@ export function LoginForm({
           console.log(formData)
 
     const formStyles = `text-md`
+    const iconClass = `absolute right-4 top-2 text-gray-500 cursor-pointer`
+
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -103,17 +107,46 @@ export function LoginForm({
                 <div className="flex items-center">
                   <Label htmlFor="password" className={`${formStyles}`}>Password</Label>
                   <a
-                    href="#"
+                    href="/forgot-password"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password"
+
+                <div className="relative">
+
+                <Input id="password" type={type}
                 defaultValue={formData.password}
                 onChange={handleChange}
                 required />
-              </div>
+              
+
+              {type === "password" && formData.password ? (
+  
+  <span className={`${iconClass}`}
+  onClick={() => setType("text")}
+  >
+    
+    <EyeIcon className="w-5 h-5" />
+  </span>
+
+) : type === "text" && formData.password && (
+
+  <span className={`${iconClass}`}
+  onClick={() => setType("password")}
+  >
+    <EyeOffIcon className="w-5 h-5" />
+  </span>
+
+)}
+
+                </div>
+
+                </div>
+
+              <div className="flex flex-col gap-3">
+
               <Button type="submit" className="w-full">
                 {loading ? <Loader2 /> : "Login"}
               </Button>
@@ -134,12 +167,17 @@ export function LoginForm({
                 }
 
               </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
+
+              </div>
+
+
+            <div className="mt-0 text-center text-sm">
               Don&apos;t have an account?{" "}
               <a href="/register" className="underline underline-offset-4">
                 Register
               </a>
+            </div>
+
             </div>
           </form>
         </CardContent>
