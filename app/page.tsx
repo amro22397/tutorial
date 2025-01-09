@@ -1,4 +1,5 @@
 import { getSession, getUser } from '@/actions/getUser'
+import EmailIsNotVerified from '@/components/EmailIsNotVerified';
 import RedirectToLogin from '@/components/RedirectToLogin';
 import { UserAuth } from '@/context/AuthContext';
 import { signOut } from 'next-auth/react';
@@ -19,7 +20,7 @@ const page = async () => {
  
   return (
     <div>
-      
+      <EmailIsNotVerified />
       <Link
       href="/signout" >
         Signout

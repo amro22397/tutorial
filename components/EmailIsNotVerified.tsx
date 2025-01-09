@@ -12,7 +12,7 @@ const EmailIsNotVerified = async () => {
 
   return (
     <>
-    {!user?.isVerified && (
+    {!user?.isVerified && user !== null && (
             <div className='bg-red-500 text-white py-1 w-full
     flex justify-center text-lg '>
       Your account is not <span className='mx-1 underline'>verified</span> yet. 

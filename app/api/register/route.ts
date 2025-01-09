@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt"
 import { sendEmail } from "@/utils/sendEmail";
 import sgMail from '@sendgrid/mail'
+import { verificationEmailTemplate } from "@/utils/verificationEmailTemplate";
 
 export async function POST(req: Request) {
     mongoose.connect(process.env.MONGO_URL as string);
@@ -20,18 +21,21 @@ export async function POST(req: Request) {
     await user.save();
     console.log(verificationToken);
 
-    const verificationLink = `${process.env.NEXTAUTH_URL}/verify-email?verifyToken=${verificationToken}`
+    const verificationLink = `${process.env.NEXTAUTH_URL}/verify-email?verifyToken=${verificationToken}&id=${user._id}`
 
     console.log(verificationLink)
 
     // await sendEmail(user?.email, "Email Verification", verificationLink);
+
+    const message = verificationEmailTemplate(verificationLink);
+    console.log(message)
     
-    
+    // Click here to verify your email: ${verificationLink}
         const msg = {
                         to : user?.email,
                         from: 'amroalmutasim22@gmail.com',
                         subject: "Email Verification",
-                        text: `Click here to verify your email: ${verificationLink}`,
+                        html: message,
                     }
             
                     sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
