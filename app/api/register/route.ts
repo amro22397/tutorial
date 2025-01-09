@@ -4,6 +4,7 @@ import bcrypt from "bcrypt"
 import { sendEmail } from "@/utils/sendEmail";
 import sgMail from '@sendgrid/mail'
 import { verificationEmailTemplate } from "@/utils/verificationEmailTemplate";
+import { Source_Code_Pro } from "next/font/google";
 
 export async function POST(req: Request) {
     mongoose.connect(process.env.MONGO_URL as string);
@@ -11,11 +12,30 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const isUserExist = await User.findOne({ name: name });
+
+    if (isUserExist) {
+        return Response.json({
+            success: false,
+            message: "User name already exists",
+        })
+    }
+
+    const isEmailExist = await User.findOne({ email: email });
+
+    if (isEmailExist) {
+        return Response.json({
+            success: false,
+            message: "Email already exists",
+        })
+    }
+
     const user = await User.create({
         name,
         email,
         hashedPassword
     })
+
 
     const verificationToken = user.getVerificationToken();
     await user.save();
@@ -43,7 +63,10 @@ export async function POST(req: Request) {
                     sgMail
                     .send(msg)
                     .then(() => {
-                        return Response.json("Verification email was sent");
+                        return Response.json({
+                            success: true,
+                            message: "Verification email was sent",
+                        });
                     })
                     .catch(async (error) => {
                         await User.updateOne({ email: email }, { $set: {
@@ -53,12 +76,15 @@ export async function POST(req: Request) {
                         
                         console.log(error)
 
-                        return Response.json("Failed sending email. Try again", {
-                            status: 400,
+                        return Response.json({
+                            success: false,
+                            message: "Failed sending email. Try again",
                         });
                     });
     
 
-    return Response.json(user)
+    return Response.json({
+        success: true,
+    })
 
 }

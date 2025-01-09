@@ -1,4 +1,4 @@
-'use client'
+/* 'use client'
 
 import { toast } from '@/hooks/use-toast';
 import axios from 'axios';
@@ -45,4 +45,4 @@ const VerifyPage = ({ verifiyToken, id }: { verifiyToken: string, id: string}) =
   )
 }
 
-export default VerifyPage
+export default VerifyPage */

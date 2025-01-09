@@ -9,6 +9,7 @@ export async function PUT(req: Request) {
     try {
         const verifyToken = crypto.createHash("sha256").update(verificationToken).digest("hex");
         console.log(verifyToken)
+        
 
     const user = await User.findOne({
         _id: userId,

@@ -62,6 +62,7 @@ export function LoginForm({
             setLoading(true);
         
             await signIn('credentials', {...formData, callbackUrl: '/'});
+
             setLoading(false);
           }
 

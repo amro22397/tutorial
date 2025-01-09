@@ -36,8 +36,8 @@ export const authOptions: AuthOptions = {
       
               const user = await User.findOne({email: credentials.email})
 
-              if (!user || !user?.hashedPassword) {
-                throw new Error("Invalid email or password");
+              if (!user) {
+                throw new Error("User is not exists");
               }
 
               const isCorrectPassword = await bcrypt.compare(
@@ -46,7 +46,7 @@ export const authOptions: AuthOptions = {
               );
       
               if (!isCorrectPassword) {
-                throw new Error("Invalid email or password");
+                throw new Error("Password is incorrect");
               }
       
               return user;

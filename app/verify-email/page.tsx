@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from "next/router"
-import VerifyPage from "./VerifyPage"
+// import VerifyPage from "./VerifyPage"
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";

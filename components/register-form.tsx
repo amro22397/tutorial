@@ -106,8 +106,6 @@ export function RegisterForm({
         
     }
 
-    console.log(formData.name.length)
-
 
     const handleSubmit = async (e: any) => {
 
@@ -158,40 +156,37 @@ export function RegisterForm({
           }
 
 
-    
-    
-    
-          axios.post("/api/register", formData)
-          .then(() => {
-            toast({
-              className: "bg-green-500 text-white",
-              title: "Account created successfully",
-            });
-    
-            signIn('credentials', {...formData, callbackUrl: '/'});
-          })
-          .then((callback: any) => {
-            if (callback?.ok) {
-              toast({
-                title: "Logged in successfully"
-              })
-            }
-    
-            if (callback?.error) {
-              toast({
-                title: `There is an error: ${callback?.error}`,
-              })
-            }
-          }).catch((error) => {
-            toast({
-              title: "Something went wrong",
-            })
-            console.log(error);
-          }).finally(() => {
-            setLoading(false);
-          })
 
-    }
+    
+          const res = await axios.post("/api/register", formData)
+
+          try {
+            
+            if (!res.data.success) {
+              toast({
+                variant: "destructive",
+                title: `${res.data.message}`,
+              })
+            }
+  
+            if (res.data.success) {
+              toast({
+                className: "bg-green-500 text-white",
+                title: "Account created successfully",
+              });
+      
+              signIn('credentials', {...formData, callbackUrl: '/'});
+            }
+
+          } catch (error) {
+            toast({
+              variant: "destructive",
+              title: `${error}`,
+            })
+          }
+
+          setLoading(false);
+          }
 
     
     const formStyles = `text-md`
