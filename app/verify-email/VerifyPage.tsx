@@ -46,3 +46,16 @@ const VerifyPage = ({ verifiyToken, id }: { verifiyToken: string, id: string}) =
 }
 
 export default VerifyPage */
+
+import React from 'react'
+
+const VerifyPage = () => {
+  return (
+    <div>
+      
+    </div>
+  )
+}
+
+export default VerifyPage
+

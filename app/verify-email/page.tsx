@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/router"
 // import VerifyPage from "./VerifyPage"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import axios from "axios";
@@ -75,8 +75,13 @@ const [loading, setLoading] = useState(false);
             
         }
 
+        const initialized = useRef(false);
+
         useEffect(() => {
-            verifyEmail();
+            if (!initialized.current) {
+              initialized.current = true;
+              verifyEmail();
+            }
         }, [verifyToken, id]);
 
 
